@@ -20,29 +20,32 @@ COPY . .
 # Create necessary directories
 RUN mkdir -p /app/logs /app/media
 
-# Collect static files
-RUN python manage.py collectstatic --noinput --clear
-
-# Create startup script
-RUN echo '#!/bin/bash\n\
+# Create startup script (collectstatic runs at runtime, not build time)
+RUN printf '#!/bin/bash\n\
 set -e\n\
+\n\
+# Collect static files\n\
+python manage.py collectstatic --noinput --clear --no-post-process\n\
+\n\
 # Run migrations\n\
 python manage.py migrate --noinput\n\
-# Create default superuser if not exists (credentials from env or defaults)\n\
+\n\
+# Create default superuser if not exists\n\
 python manage.py shell -c "\n\
 from django.contrib.auth import get_user_model;\n\
 User = get_user_model();\n\
 if not User.objects.filter(is_superuser=True).exists():\n\
     import os;\n\
     User.objects.create_superuser(\n\
-        os.environ.get(\"DJANGO_SUPERUSER_USERNAME\", \"admin\"),\n\
-        os.environ.get(\"DJANGO_SUPERUSER_EMAIL\", \"admin@enerpulse.com\"),\n\
-        os.environ.get(\"DJANGO_SUPERUSER_PASSWORD\", \"admin123\")\n\
+        os.environ.get("DJANGO_SUPERUSER_USERNAME", "admin"),\n\
+        os.environ.get("DJANGO_SUPERUSER_EMAIL", "admin@enerpulse.com"),\n\
+        os.environ.get("DJANGO_SUPERUSER_PASSWORD", "admin123")\n\
     );\n\
-    print(\"Superuser created\")\n\
+    print("Superuser created")\n\
 else:\n\
-    print(\"Superuser already exists\")\n\
+    print("Superuser already exists")\n\
 "\n\
+\n\
 # Start gunicorn\n\
 exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120\n\
 ' > /app/start.sh && chmod +x /app/start.sh
