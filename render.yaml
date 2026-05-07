@@ -2,7 +2,7 @@ services:
   - type: web
     name: enerpulse-mlm
     env: docker
-    dockerfilePath: ./Dockerfile.render
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true
