@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Shopping Cart" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.cart-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+    transition: all 0.3s ease;
+}
+.cart-item:hover {
+    border-color: var(--border-glow);
+}
+.cart-item-img {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(124,58,237,0.05));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.cart-item-img i {
+    font-size: 1.8rem;
+    opacity: 0.4;
+}
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.qty-btn:hover {
+    border-color: var(--accent-1);
+    color: var(--accent-1);
+    background: rgba(0,212,255,0.1);
+}
+.qty-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+.qty-value {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+.cart-summary {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.8rem;
+    position: sticky;
+    top: 90px;
+}
+.cart-summary h5 {
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.cart-summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+.cart-summary-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0 0;
+    margin-top: 0.8rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+.remove-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 4px;
+}
+.remove-btn:hover {
+    color: #ef4444;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3 mb-5">
+            <div>
+                <div class="section-label">{% trans "Cart" %}</div>
+                <h2 class="display-5 fw-bold mb-0">{% trans "Shopping Cart" %}</h2>
+            </div>
+            <span class="text-secondary" id="cartItemCount" v-if="items.length">(${ items.length } {% trans "items" %})</span>
+        </div>
+
+        <div v-if="loading" class="text-center py-5">
+            <div class="spinner-border" style="color: var(--accent-1);" role="status"></div>
+        </div>
+
+        <!-- Empty cart -->
+        <div v-if="!loading && items.length === 0" class="text-center py-5">
+            <i class="fas fa-shopping-bag fa-4x text-muted mb-3"></i>
+            <h4>{% trans "Your cart is empty" %}</h4>
+            <p class="text-secondary">{% trans "Browse our quantum devices and add items to your cart." %}</p>
+            <a href="{% url 'product_list' %}" class="btn btn-glow">
+                <i class="fas fa-box me-2"></i>{% trans "Browse Products" %}
+            </a>
+        </div>
+
+        <!-- Cart with items -->
+        <div v-if="!loading && items.length > 0" class="row g-4">
+            <div class="col-lg-8">
+                <div class="d-flex flex-column gap-3">
+                    <div v-for="item in items" :key="item.product_id" class="cart-item">
+                        <div class="d-flex gap-3 align-items-center">
+                            <!-- Image -->
+                            <div class="cart-item-img">
+                                <img v-if="item.image" :src="item.image" :alt="item.name" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                                <i v-else class="fas fa-bolt"></i>
+                            </div>
+                            <!-- Info -->
+                            <div class="flex-grow-1 min-w-0">
+                                <h6 class="fw-bold mb-1 text-truncate">${ item.name }</h6>
+                                <span class="product-pv">${ item.pv } PV</span>
+                                <div class="mt-1">
+                                    <span class="fw-bold" style="color: var(--accent-1);">$${ formatPrice(item.price) }</span>
+                                    <span class="text-muted ms-2">× ${ item.quantity }</span>
+                                </div>
+                            </div>
+                            <!-- Quantity -->
+                            <div class="d-flex align-items-center gap-1">
+                                <button class="qty-btn" @click="decrement(item)" :disabled="updating === item.product_id">
+                                    <i class="fas fa-minus fa-xs"></i>
+                                </button>
+                                <span class="qty-value">${ item.quantity }</span>
+                                <button class="qty-btn" @click="increment(item)" :disabled="updating === item.product_id">
+                                    <i class="fas fa-plus fa-xs"></i>
+                                </button>
+                            </div>
+                            <!-- Subtotal -->
+                            <div class="text-end" style="min-width:80px;">
+                                <div class="fw-bold">$${ formatPrice(item.price * item.quantity) }</div>
+                            </div>
+                            <!-- Remove -->
+                            <button class="remove-btn" @click="removeItem(item)" :disabled="updating === item.product_id">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-sm" style="color: var(--text-muted);" @click="clearCart">
+                        <i class="fas fa-trash-alt me-1"></i>{% trans "Clear Cart" %}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary sidebar -->
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h5><i class="fas fa-receipt me-2" style="color: var(--accent-1);"></i>{% trans "Order Summary" %}</h5>
+                    <div class="cart-summary-row">
+                        <span>{% trans "Items" %}</span>
+                        <span>${ itemCount }</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span>{% trans "Total PV" %}</span>
+                        <span class="fw-bold" style="color: var(--accent-3);">${ totalPV } PV</span>
+                    </div>
+                    <div class="cart-summary-total">
+                        <span>{% trans "Total" %}</span>
+                        <span class="gradient-text">$${ formatPrice(totalPrice) }</span>
+                    </div>
+                    <button class="btn btn-glow w-100 mt-3 py-2" @click="checkout">
+                        <i class="fas fa-credit-card me-2"></i>{% trans "Proceed to Checkout" %}
+                    </button>
+                    <a href="{% url 'product_list' %}" class="btn btn-outline-glow w-100 mt-2 py-2">
+                        <i class="fas fa-arrow-left me-2"></i>{% trans "Continue Shopping" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const { createApp } = Vue;
+
+createApp({
+    delimiters: ['${', '}'],
+    data() {
+        return {
+            items: [],
+            loading: true,
+            updating: null,
+        };
+    },
+    computed: {
+        itemCount() {
+            return this.items.reduce((sum, i) => sum + i.quantity, 0);
+        },
+        totalPrice() {
+            return this.items.reduce((sum, i) => sum + parseFloat(i.price) * i.quantity, 0);
+        },
+        totalPV() {
+            return this.items.reduce((sum, i) => sum + i.pv * i.quantity, 0);
+        },
+    },
+    methods: {
+        async fetchCart() {
+            try {
+                const resp = await fetch('/api/cart/view/');
+                const data = await resp.json();
+                this.items = data.items || [];
+            } catch (err) {
+                console.error('Failed to load cart:', err);
+            } finally {
+                this.loading = false;
+            }
+        },
+        formatPrice(price) {
+            return parseFloat(price).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+        },
+        async addToCart(productId, qty = 1) {
+            await fetch('/api/cart/add/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ product_id: productId, quantity: qty }),
+            });
+            this.fetchCart();
+        },
+        async increment(item) {
+            this.updating = item.product_id;
+            await fetch('/api/cart/update/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ product_id: item.product_id, quantity: item.quantity + 1 }),
+            });
+            this.updating = null;
+            this.fetchCart();
+            this.updateNavBadge();
+        },
+        async decrement(item) {
+            if (item.quantity <= 1) {
+                this.removeItem(item);
+                return;
+            }
+            this.updating = item.product_id;
+            await fetch('/api/cart/update/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ product_id: item.product_id, quantity: item.quantity - 1 }),
+            });
+            this.updating = null;
+            this.fetchCart();
+            this.updateNavBadge();
+        },
+        async removeItem(item) {
+            this.updating = item.product_id;
+            await fetch('/api/cart/remove/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ product_id: item.product_id }),
+            });
+            this.updating = null;
+            this.fetchCart();
+            this.updateNavBadge();
+        },
+        async clearCart() {
+            await fetch('/api/cart/clear/', { method: 'POST' });
+            this.fetchCart();
+            this.updateNavBadge();
+        },
+        checkout() {
+            window.location.href = '/cart/checkout/';
+        },
+        updateNavBadge() {
+            // Fetch cart count and update navbar badge
+            fetch('/api/cart/view/').then(r => r.json()).then(data => {
+                const count = data.summary?.count || 0;
+                // Dispatch a custom event so base template can pick it up
+                window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count } }));
+            });
+        },
+    },
+    mounted() {
+        this.fetchCart();
+    },
+}).mount('#mainContent');
+</script>
+{% endblock %}

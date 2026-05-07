@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "MLM Dashboard" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.mlm-hero {
+    background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(124,58,237,0.05));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+.mlm-stat {
+    text-align: center;
+    padding: 1rem;
+}
+.mlm-stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+}
+.mlm-stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+.tree-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.tree-node {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.tree-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+    margin-bottom: 4px;
+}
+.tree-branches {
+    display: flex;
+    gap: 3rem;
+    margin-top: 1.5rem;
+    position: relative;
+}
+.tree-branches::before {
+    content: '';
+    position: absolute;
+    top: -1rem;
+    left: 50%;
+    width: 1px;
+    height: 1rem;
+    background: var(--border-color);
+}
+.tree-leg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <div>
+                <div class="section-label">{% trans "MLM" %}</div>
+                <h2 class="display-5 fw-bold mb-0">{% trans "MLM Dashboard" %}</h2>
+                <p class="text-secondary">{% trans "Track your team and earnings" %}</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'mlm_tree' %}" class="btn btn-outline-glow btn-sm">
+                    <i class="fas fa-sitemap me-1"></i>{% trans "Full Tree" %}
+                </a>
+                <a href="{% url 'mlm_bonuses' %}" class="btn btn-outline-glow btn-sm">
+                    <i class="fas fa-coins me-1"></i>{% trans "Bonuses" %}
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="mlm-hero mb-4 animate-on-view">
+            <div class="row">
+                <div class="col-4 col-md-2">
+                    <div class="mlm-stat">
+                        <div class="mlm-stat-value gradient-text">{{ user.sponsored_members.count }}</div>
+                        <div class="mlm-stat-label">{% trans "Referrals" %}</div>
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="mlm-stat">
+                        <div class="mlm-stat-value" style="color: var(--accent-1);">{{ user.left_leg_units }}</div>
+                        <div class="mlm-stat-label">{% trans "Left Leg" %}</div>
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="mlm-stat">
+                        <div class="mlm-stat-value" style="color: var(--accent-3);">{{ user.right_leg_units }}</div>
+                        <div class="mlm-stat-label">{% trans "Right Leg" %}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mt-3 mt-md-0">
+                    <div class="mlm-stat">
+                        <div class="mlm-stat-value" style="color: #22c55e;">{{ user.total_pv }}</div>
+                        <div class="mlm-stat-label">{% trans "Total PV" %}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mt-3 mt-md-0">
+                    <div class="mlm-stat">
+                        <div class="mlm-stat-value" style="color: #8b5cf6;">
+                            {% if user.is_member %}{{ user.membership_level }}{% else %}-{% endif %}
+                        </div>
+                        <div class="mlm-stat-label">{% trans "Level" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Binary Tree Preview -->
+            <div class="col-lg-8">
+                <div class="card-glow p-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-sitemap me-2" style="color: var(--accent-1);"></i>
+                        {% trans "Your Binary Tree" %}
+                    </h5>
+                    <div class="tree-card">
+                        {% if user.sponsored_members.exists %}
+                            <div class="tree-node">
+                                <div class="tree-avatar" style="background: var(--gradient-primary);">
+                                    {{ user.username|first|upper }}
+                                </div>
+                                <div style="font-size:0.85rem;font-weight:600;">{{ user.username }}</div>
+                                <div class="product-pv" style="font-size:0.7rem;">{{ user.membership_level }}</div>
+                            </div>
+                            <div class="tree-branches">
+                                <div class="tree-leg">
+                                    <div class="tree-node">
+                                        <div class="tree-avatar" style="background: var(--accent-1);">
+                                            {% with left=user.sponsored_members.first %}
+                                                {{ left.username|first|upper }}
+                                            {% endwith %}
+                                        </div>
+                                        <div style="font-size:0.75rem;font-weight:500;">
+                                            {% with left=user.sponsored_members.first %}
+                                                {{ left.username }}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tree-leg">
+                                    <div class="tree-node">
+                                        <div class="tree-avatar" style="background: var(--accent-3);">
+                                            {% with right=user.sponsored_members.last %}
+                                                {{ right.username|first|upper }}
+                                            {% endwith %}
+                                        </div>
+                                        <div style="font-size:0.75rem;font-weight:500;">
+                                            {% with right=user.sponsored_members.last %}
+                                                {{ right.username }}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                <i class="fas fa-tree fa-4x mb-3" style="color: var(--text-muted);"></i>
+                                <p class="text-secondary">{% trans "Your binary tree will grow as you build your team." %}</p>
+                                <p class="text-muted" style="font-size:0.85rem;">
+                                    {% trans "Share your referral link to start building your downline." %}
+                                </p>
+                                {% if user.referral_code %}
+                                <div class="input-group input-group-sm mx-auto" style="max-width:400px;">
+                                    <input type="text" class="form-control" id="refLink" 
+                                           value="{{ request.scheme }}://{{ request.get_host }}/register/?ref={{ user.referral_code }}" readonly
+                                           style="background:rgba(255,255,255,0.04);border:1px solid var(--border-color);color:var(--text-primary);font-size:0.85rem;">
+                                    <button class="btn btn-glow btn-sm" onclick="copyRefLink()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'mlm_tree' %}" class="btn btn-outline-glow btn-sm">
+                            <i class="fas fa-expand me-1"></i>{% trans "View Full Binary Tree" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referral Link & Quick Info -->
+            <div class="col-lg-4">
+                <div class="card-glow p-4 mb-3">
+                    <h5 class="fw-bold mb-3" style="font-size:0.95rem;">
+                        <i class="fas fa-link me-2" style="color: var(--accent-1);"></i>
+                        {% trans "Your Referral Link" %}
+                    </h5>
+                    <div class="mb-2">
+                        <div class="d-flex gap-2 mb-2">
+                            <button class="btn btn-glow btn-sm flex-grow-1" onclick="showRefLink('left')">
+                                <i class="fas fa-arrow-left me-1"></i>{% trans "Left Leg" %}
+                            </button>
+                            <button class="btn btn-outline-glow btn-sm flex-grow-1" onclick="showRefLink('right')">
+                                {% trans "Right Leg" %} <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" id="refLinkSide" readonly
+                                   style="background:rgba(255,255,255,0.04);border:1px solid var(--border-color);color:var(--text-primary);font-size:0.8rem;">
+                            <button class="btn btn-glow btn-sm" onclick="copyRefLinkSide()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="mt-1 text-muted" style="font-size:0.75rem;" id="refLinkSideLabel">
+                            {% trans "Click Left or Right to generate the link" %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-glow p-4">
+                    <h5 class="fw-bold mb-3" style="font-size:0.95rem;">
+                        <i class="fas fa-trophy me-2" style="color: var(--accent-3);"></i>
+                        {% trans "Next Rank" %}
+                    </h5>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-secondary" style="font-size:0.9rem;">{% trans "Current" %}</span>
+                        <span class="fw-bold">
+                            {% if user.is_member %}{{ user.membership_level }}{% else %}<span class="text-muted">{% trans "Non-Member" %}</span>{% endif %}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary" style="font-size:0.9rem;">{% trans "Next" %}</span>
+                        <span class="fw-bold gradient-text">
+                            {% if user.membership_level == 'P3' %}P4{% elif user.membership_level == 'P4' %}P5{% else %}P3{% endif %}
+                        </span>
+                    </div>
+                    <div class="mt-3" style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                        <div style="height:100%;width:0%;background:var(--gradient-primary);border-radius:3px;"></div>
+                    </div>
+                    <div class="mt-2 text-muted" style="font-size:0.8rem;">
+                        {% trans "Purchase units to level up and unlock higher bonuses." %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function copyRefLink() {
+    const input = document.getElementById('refLink') || document.getElementById('refLinkSide');
+    input.select();
+    navigator.clipboard.writeText(input.value);
+    const btn = input.nextElementSibling;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+}
+
+function showRefLink(pos) {
+    const base = window.location.origin + '/register/?ref={{ user.referral_code }}';
+    const link = base + '&pos=' + pos;
+    const input = document.getElementById('refLinkSide');
+    input.value = link;
+    const label = document.getElementById('refLinkSideLabel');
+    label.innerHTML = '<i class="fas fa-' + (pos === 'left' ? 'arrow-left' : 'arrow-right') + ' me-1"></i>' +
+        (pos === 'left' ? '{% trans "Left" %}' : '{% trans "Right" %}') + ' leg referral link ready';
+    label.style.color = 'var(--accent-1)';
+}
+
+function copyRefLinkSide() {
+    const input = document.getElementById('refLinkSide');
+    if (!input.value) return;
+    input.select();
+    navigator.clipboard.writeText(input.value);
+    const btn = input.nextElementSibling;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install system dependencies (no PostgreSQL needed - using SQLite)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Add whitenoise for static files in production
+RUN pip install --no-cache-dir whitenoise
+
+# Copy project
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/media
+
+# Collect static files
+RUN python manage.py collectstatic --noinput --clear
+
+# Create startup script
+RUN echo '#!/bin/bash\n\
+set -e\n\
+# Run migrations\n\
+python manage.py migrate --noinput\n\
+# Create default superuser if not exists (credentials from env or defaults)\n\
+python manage.py shell -c "\n\
+from django.contrib.auth import get_user_model;\n\
+User = get_user_model();\n\
+if not User.objects.filter(is_superuser=True).exists():\n\
+    import os;\n\
+    User.objects.create_superuser(\n\
+        os.environ.get(\"DJANGO_SUPERUSER_USERNAME\", \"admin\"),\n\
+        os.environ.get(\"DJANGO_SUPERUSER_EMAIL\", \"admin@enerpulse.com\"),\n\
+        os.environ.get(\"DJANGO_SUPERUSER_PASSWORD\", \"admin123\")\n\
+    );\n\
+    print(\"Superuser created\")\n\
+else:\n\
+    print(\"Superuser already exists\")\n\
+"\n\
+# Start gunicorn\n\
+exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120\n\
+' > /app/start.sh && chmod +x /app/start.sh
+
+EXPOSE 8000
+
+CMD ["/app/start.sh"]

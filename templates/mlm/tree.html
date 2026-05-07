@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Binary Tree" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.tree-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <div>
+                <div class="section-label">{% trans "Tree" %}</div>
+                <h2 class="display-5 fw-bold mb-0">{% trans "Binary Tree" %}</h2>
+                <p class="text-secondary">{% trans "Visualize your downline structure" %}</p>
+            </div>
+            <a href="{% url 'mlm_dashboard' %}" class="btn btn-outline-glow btn-sm">
+                <i class="fas fa-arrow-left me-1"></i>{% trans "Back" %}
+            </a>
+        </div>
+
+        <div class="tree-container">
+            <div class="text-center py-5">
+                <i class="fas fa-sitemap fa-4x mb-3" style="color: var(--text-muted);"></i>
+                <h5>{% trans "Binary tree visualization" %}</h5>
+                <p class="text-secondary">{% trans "Full interactive tree view coming soon. Your team structure will be displayed here." %}</p>
+                <a href="{% url 'mlm_dashboard' %}" class="btn btn-glow mt-2">
+                    <i class="fas fa-arrow-left me-2"></i>{% trans "Return to Dashboard" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

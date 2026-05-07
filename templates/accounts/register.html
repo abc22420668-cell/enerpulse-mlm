@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Register" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.auth-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+}
+.auth-card .form-control {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+}
+.auth-card .form-control:focus {
+    background: rgba(255,255,255,0.06);
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+    color: var(--text-primary);
+}
+.auth-card .input-group-text {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+.auth-card label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+.auth-link {
+    color: var(--accent-1);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+.auth-link:hover { color: #00b8e6; }
+.benefit-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+}
+.benefit-card li {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.6rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="auth-card">
+                <div class="text-center mb-4">
+                    <i class="fas fa-bolt fa-3x" style="color: var(--accent-1);"></i>
+                    <h4 class="fw-bold mt-3">{% trans "Join EnerPulse" %}</h4>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "Start your quantum journey today" %}</p>
+                </div>
+                
+                {% if referral_code %}
+                <div class="alert-custom mb-3">
+                    <i class="fas fa-link me-2"></i>
+                    {% trans "You were referred by member" %} <strong>{{ referral_code|truncatechars:8 }}</strong>
+                    {% if request.GET.pos %}<span class="ms-2 badge" style="background:rgba(0,212,255,0.15);color:var(--accent-1);">{% trans "Position" %}: {{ request.GET.pos }}</span>{% endif %}
+                </div>
+                {% endif %}
+                
+                <form id="registerForm" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Username" %} *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" name="username" class="form-control" required minlength="3">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Email" %} *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Password" %} *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password" class="form-control" required minlength="6">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Confirm Password" %} *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                                <input type="password" name="password2" class="form-control" required minlength="6">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Phone" %}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input type="text" name="phone" class="form-control" placeholder="+886...">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Country" %}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                <input type="text" name="country" class="form-control" placeholder="{% trans 'Taiwan' %}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label>{% trans "Referral Code" %} <span class="text-muted" style="font-weight:400;">({% trans "optional" %})</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-link"></i></span>
+                            <input type="text" name="referral_code" class="form-control" 
+                                   value="{{ referral_code }}" placeholder="{% trans 'Enter referral code' %}">
+                        </div>
+                    </div>
+                    
+                    <div id="registerErrors" class="alert-custom error d-none py-2"></div>
+                    <div id="registerSuccess" class="alert-custom success d-none py-2"></div>
+                    
+                    <button type="submit" class="btn btn-glow w-100 py-2" id="registerBtn">
+                        <i class="fas fa-user-plus me-2"></i>{% trans "Create Account" %}
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-secondary mb-0" style="font-size:0.9rem;">
+                        {% trans "Already have an account?" %}
+                        <a href="{% url 'login' %}" class="auth-link">{% trans "Sign In" %}</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Benefits -->
+            <div class="benefit-card mt-4 animate-on-view">
+                <h5 class="fw-bold"><i class="fas fa-gift me-2" style="color: var(--accent-1);"></i>{% trans "Membership Benefits" %}</h5>
+                <ul class="list-unstyled mb-0 mt-3">
+                    <li><i class="fas fa-check-circle me-2" style="color: #22c55e;"></i>{% trans "375 USD shopping points upon registration" %}</li>
+                    <li><i class="fas fa-check-circle me-2" style="color: #22c55e;"></i>{% trans "375 USD bonus points for each referral" %}</li>
+                    <li><i class="fas fa-check-circle me-2" style="color: #22c55e;"></i>{% trans "Access to 6 types of MLM bonuses" %}</li>
+                    <li><i class="fas fa-check-circle me-2" style="color: #22c55e;"></i>{% trans "Virtual wallet with USDT withdrawals" %}</li>
+                    <li><i class="fas fa-check-circle me-2" style="color: #22c55e;"></i>{% trans "Global dividend qualification" %}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('registerBtn');
+    const errors = document.getElementById('registerErrors');
+    const success = document.getElementById('registerSuccess');
+    
+    errors.classList.add('d-none');
+    success.classList.add('d-none');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>{% trans "Registering..." %}';
+    
+    // Read position from URL (?pos=left or ?pos=right)
+    const urlParams = new URLSearchParams(window.location.search);
+    const posFromUrl = urlParams.get('pos');
+
+    const formData = new FormData(this);
+    const data = {
+        username: formData.get('username'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        password2: formData.get('password2'),
+        referral_code: formData.get('referral_code') || undefined,
+        position: posFromUrl || (formData.get('position') || undefined),
+        phone: formData.get('phone'),
+        country: formData.get('country'),
+    };
+    
+    try {
+        const resp = await fetch('/api/auth/user/register/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data),
+        });
+        const result = await resp.json();
+        
+        if (resp.ok) {
+            success.classList.remove('d-none');
+            success.innerHTML = '<i class="fas fa-check-circle me-2"></i>{% trans "Registration successful! Redirecting to login..." %}';
+            setTimeout(() => window.location.href = '{% url "login" %}', 1500);
+        } else {
+            errors.classList.remove('d-none');
+            const msgs = Object.values(result).flat().join('<br>');
+            errors.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + msgs;
+        }
+    } catch (err) {
+        errors.classList.remove('d-none');
+        errors.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>{% trans "Network error. Please try again." %}';
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-user-plus me-2"></i>{% trans "Create Account" %}';
+});
+</script>
+{% endblock %}

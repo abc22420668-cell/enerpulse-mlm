@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "My Profile" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1rem;
+}
+.profile-field {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.profile-field:last-child {
+    border-bottom: none;
+}
+.profile-field-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+.profile-field-value {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3 mb-5">
+            <div>
+                <div class="section-label">{% trans "Profile" %}</div>
+                <h2 class="display-5 fw-bold mb-0">{% trans "My Profile" %}</h2>
+                <p class="text-secondary">{% trans "Welcome back" %}, {{ user.username }}!</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Profile Card -->
+            <div class="col-lg-4">
+                <div class="card-glow p-4 text-center">
+                    <div class="profile-avatar mx-auto">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <h5 class="fw-bold">{{ user.username }}</h5>
+                    <p class="text-secondary" style="font-size:0.9rem;">{{ user.email }}</p>
+                    <div class="mt-2">
+                        {% if user.is_member %}
+                        <span class="badge" style="background: rgba(34,197,94,0.15); color:#22c55e; padding:6px 14px;">
+                            <i class="fas fa-check-circle me-1"></i>{{ user.membership_level }}
+                        </span>
+                        {% else %}
+                        <span class="badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted); padding:6px 14px;">
+                            {% trans "Non-Member" %}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <hr style="border-color: var(--border-color); margin: 1.2rem 0;">
+                    <div class="profile-field">
+                        <span class="profile-field-label">{% trans "Referral Code" %}</span>
+                        <span class="profile-field-value" style="font-family:monospace;font-size:0.8rem;">{{ user.referral_code|truncatechars:12 }}</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">{% trans "Joined" %}</span>
+                        <span class="profile-field-value">{{ user.join_date|date:"Y-m-d" }}</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">{% trans "Status" %}</span>
+                        <span class="profile-field-value" style="color:#22c55e;">{% trans "Active" %}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MLM Stats -->
+            <div class="col-lg-8">
+                <div class="card-glow p-4 mb-4">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-chart-bar me-2" style="color: var(--accent-1);"></i>{% trans "MLM Performance" %}</h5>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3" style="background:rgba(255,255,255,0.02);border-radius:var(--radius-sm);">
+                                <div class="fw-bold fs-4 gradient-text">{{ user.sponsored_members.count }}</div>
+                                <small class="text-muted">{% trans "Referrals" %}</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3" style="background:rgba(255,255,255,0.02);border-radius:var(--radius-sm);">
+                                <div class="fw-bold fs-4" style="color:var(--accent-1);">{{ user.left_leg_units }}</div>
+                                <small class="text-muted">{% trans "Left Units" %}</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3" style="background:rgba(255,255,255,0.02);border-radius:var(--radius-sm);">
+                                <div class="fw-bold fs-4" style="color:var(--accent-3);">{{ user.right_leg_units }}</div>
+                                <small class="text-muted">{% trans "Right Units" %}</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3" style="background:rgba(255,255,255,0.02);border-radius:var(--radius-sm);">
+                                <div class="fw-bold fs-4" style="color:#22c55e;">{{ user.total_pv }}</div>
+                                <small class="text-muted">{% trans "Total PV" %}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Info -->
+                <div class="card-glow p-4">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-user-cog me-2" style="color: var(--accent-1);"></i>{% trans "Account Information" %}</h5>
+                    <div class="profile-field">
+                        <span class="profile-field-label">{% trans "Username" %}</span>
+                        <span class="profile-field-value">{{ user.username }}</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">{% trans "Email" %}</span>
+                        <span class="profile-field-value">{{ user.email }}</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">{% trans "Phone" %}</span>
+                        <span class="profile-field-value">{{ user.phone|default:"—" }}</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">{% trans "Country" %}</span>
+                        <span class="profile-field-value">{{ user.country|default:"—" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

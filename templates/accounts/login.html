@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Login" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.auth-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+}
+.auth-card .form-control {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+}
+.auth-card .form-control:focus {
+    background: rgba(255,255,255,0.06);
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+    color: var(--text-primary);
+}
+.auth-card .input-group-text {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+.auth-card label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+.auth-link {
+    color: var(--accent-1);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+.auth-link:hover {
+    color: #00b8e6;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="auth-card">
+                <div class="text-center mb-4">
+                    <i class="fas fa-bolt fa-3x" style="color: var(--accent-1);"></i>
+                    <h4 class="fw-bold mt-3">{% trans "Welcome Back" %}</h4>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "Sign in to your EnerPulse account" %}</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label>{% trans "Username" %}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label>{% trans "Password" %}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    {% if form.errors %}
+                    <div class="alert-custom error mb-3">
+                        <i class="fas fa-exclamation-circle me-2"></i>{% trans "Invalid username or password." %}
+                    </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="btn btn-glow w-100 py-2">
+                        <i class="fas fa-sign-in-alt me-2"></i>{% trans "Sign In" %}
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-secondary mb-0" style="font-size:0.9rem;">
+                        {% trans "Don't have an account?" %}
+                        <a href="{% url 'register' %}" class="auth-link">
+                            {% trans "Register" %}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

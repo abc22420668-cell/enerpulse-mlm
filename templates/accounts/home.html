@@ -1,0 +1,790 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}EnerPulse — {% trans "Your Health & Wealth Journey" %}{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ========== Hero Section ========== */
+.hero {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 0;
+}
+
+/* Animated gradient background */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 30%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 50% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 40%);
+    pointer-events: none;
+}
+
+/* Floating orbs */
+.hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+}
+.hero-orb-1 {
+    width: 400px; height: 400px;
+    background: rgba(0, 212, 255, 0.08);
+    top: -10%; left: -5%;
+    animation: float 8s ease-in-out infinite;
+}
+.hero-orb-2 {
+    width: 300px; height: 300px;
+    background: rgba(124, 58, 237, 0.06);
+    bottom: -5%; right: 10%;
+    animation: float 10s ease-in-out infinite reverse;
+}
+
+.hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.hero .lead {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--text-secondary);
+    max-width: 560px;
+    line-height: 1.7;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+.hero-stat {
+    text-align: center;
+}
+.hero-stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.hero-stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Hero device mockup */
+.hero-device {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    margin: 0 auto;
+}
+.hero-device-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    animation: spin 20s linear infinite;
+}
+.hero-device-ring:nth-child(2) {
+    inset: 20px;
+    border-color: rgba(124, 58, 237, 0.1);
+    animation-direction: reverse;
+    animation-duration: 15s;
+}
+.hero-device-ring:nth-child(3) {
+    inset: 40px;
+    border-color: rgba(245, 158, 11, 0.08);
+    animation-duration: 25s;
+}
+.hero-device-icon {
+    position: absolute;
+    inset: 60px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: white;
+    box-shadow: 0 0 60px rgba(0, 212, 255, 0.2);
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ========== Section Base ========== */
+.section {
+    padding: 5rem 0;
+}
+
+/* ========== How It Works ========== */
+.step-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+.step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.step-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow-glow);
+}
+.step-card:hover::before { opacity: 1; }
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    margin: 0 auto 1.2rem;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+}
+.step-card h5 {
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+.step-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ========== Products ========== */
+.product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.4s ease;
+    height: 100%;
+    position: relative;
+}
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+}
+.product-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow-glow);
+}
+.product-card:hover::before { opacity: 1; }
+
+.product-image {
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(124, 58, 237, 0.05));
+    position: relative;
+    overflow: hidden;
+}
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+.product-image i {
+    font-size: 4.5rem;
+    opacity: 0.6;
+    z-index: 1;
+}
+.product-image .placeholder-icon {
+    font-size: 4.5rem;
+    opacity: 0.6;
+    z-index: 1;
+}
+.product-image .placeholder-glow {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.08), transparent);
+    pointer-events: none;
+}
+.product-image::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.08), transparent);
+    pointer-events: none;
+}
+
+.product-body {
+    padding: 1.5rem;
+}
+.product-body h5 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.product-body p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+.product-pv {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-1);
+    background: rgba(0, 212, 255, 0.1);
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 212, 255, 0.15);
+}
+.product-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0.5rem 0;
+}
+.product-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ========== Bonus Section ========== */
+.bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+.bonus-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+}
+.bonus-card:hover {
+    border-color: var(--border-glow);
+    background: var(--bg-card-hover);
+}
+.bonus-badge {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: white;
+}
+.bonus-card h6 {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+.bonus-card p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ========== Wallet Split ========== */
+.wallet-split-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.wallet-split-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.06), transparent 60%);
+    pointer-events: none;
+}
+.wallet-pct {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+}
+.wallet-pct.gold { color: var(--accent-3); }
+.wallet-pct.green { color: #22c55e; }
+.wallet-sub {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.wallet-note {
+    background: rgba(0, 212, 255, 0.06);
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.5rem;
+    color: var(--accent-1);
+    font-size: 0.95rem;
+}
+
+/* ========== Features ========== */
+.feature-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+/* ========== CTA ========== */
+.cta-section {
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+.cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0, 212, 255, 0.06), transparent);
+    pointer-events: none;
+}
+
+/* ========== Star Table ========== */
+.star-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.star-table thead th {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.star-table tbody td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.star-table tbody tr:hover td {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.02);
+}
+
+/* ========== Divider ========== */
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.1), transparent);
+    margin: 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="section-label">EnerPulse (TM)</div>
+                <h1>{% trans "Build Your Wealth Journey with EnerPulse" %}</h1>
+                <p class="lead">
+                    {% trans "Quantum frequency technology meets powerful binary MLM compensation. Premium health devices + 6 income streams." %}
+                </p>
+                <div class="d-flex gap-3 flex-wrap mt-4">
+                    <a href="{% url 'register' %}" class="btn btn-glow btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>{% trans "Join Now" %}
+                    </a>
+                    <a href="#products" class="btn btn-outline-glow btn-lg">
+                        <i class="fas fa-box me-2"></i>{% trans "View Products" %}
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">$1,000</div>
+                        <div class="hero-stat-label">{% trans "Per Unit" %}</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">750</div>
+                        <div class="hero-stat-label">{% trans "PV" %}</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">50%</div>
+                        <div class="hero-stat-label">{% trans "Level Match" %}</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">6</div>
+                        <div class="hero-stat-label">{% trans "Income Streams" %}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="hero-device">
+                    <div class="hero-device-ring"></div>
+                    <div class="hero-device-ring"></div>
+                    <div class="hero-device-ring"></div>
+                    <div class="hero-device-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-label">{% trans "Process" %}</div>
+            <h2 class="display-5 fw-bold">{% trans "How It Works" %}</h2>
+            <p class="text-secondary" style="max-width: 500px; margin: 0 auto;">
+                {% trans "Three simple steps to start earning with EnerPulse" %}
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step-card animate-on-view">
+                    <div class="step-number">1</div>
+                    <h5>{% trans "Register & Become a Member" %}</h5>
+                    <p>{% trans "Sign up with a referral link and purchase your first Quantum Pulse device to activate membership." %}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card animate-on-view">
+                    <div class="step-number">2</div>
+                    <h5>{% trans "Refer & Build Your Team" %}</h5>
+                    <p>{% trans "Share your unique referral link. Your team grows in a binary tree structure for maximum rewards." %}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card animate-on-view">
+                    <div class="step-number">3</div>
+                    <h5>{% trans "Earn Multiple Bonuses" %}</h5>
+                    <p>{% trans "6 types of bonuses calculated daily into your virtual wallet. 80% withdrawable, 20% for product repurchases." %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ==================== PRODUCTS ==================== -->
+<section id="products" class="section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
+            <div>
+                <div class="section-label">{% trans "Products" %}</div>
+                <h2 class="display-5 fw-bold">{% trans "Quantum Devices" %}</h2>
+                <p class="text-secondary mb-0">{% trans "Premium frequency technology with MLM rewards" %}</p>
+            </div>
+            <a href="{% url 'product_list' %}" class="btn btn-outline-glow d-none d-sm-inline-flex">
+                {% trans "View All" %} <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-md-4">
+                <div class="product-card animate-on-view">
+                    <div class="product-image">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.get_name }}" style="width:100%;height:100%;object-fit:cover;">
+                        {% else %}
+                        <div class="placeholder-glow"></div>
+                        <i class="fas fa-bolt placeholder-icon" style="color:{% cycle '#00d4ff' '#7c3aed' '#f59e0b' '#22c55e' '#ef4444' '#06b6d4' %};"></i>
+                        {% endif %}
+                    </div>
+                    <div class="product-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5>{{ product.get_name }}</h5>
+                            <span class="product-pv">{{ product.pv }} PV</span>
+                        </div>
+                        <p>{{ product.get_description|default:_("Quantum frequency resonance device.") }}</p>
+                        <div class="product-price">${{ product.price_usd|floatformat:2 }}</div>
+                        <div class="product-actions">
+                            <button class="btn btn-glow flex-grow-1 add-to-cart-btn" data-product-id="{{ product.id }}" onclick="addToCartHome(this, {{ product.id }})">
+                                <i class="fas fa-shopping-bag me-2"></i>{% trans "Add to Cart" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                <h5>{% trans "No products yet" %}</h5>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4 d-sm-none">
+            <a href="{% url 'product_list' %}" class="btn btn-outline-glow">
+                {% trans "View All Products" %} <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ==================== COMPENSATION PLAN ==================== -->
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-label">{% trans "Compensation Plan" %}</div>
+            <h2 class="display-5 fw-bold">{% trans "6 Income Streams" %}</h2>
+            <p class="text-secondary" style="max-width: 500px; margin: 0 auto;">
+                {% trans "Our powerful binary (dual-track) compensation plan" %}
+            </p>
+        </div>
+        <div class="bonus-grid">
+            <div class="bonus-card">
+                <div class="bonus-badge" style="background: linear-gradient(135deg, #22c55e, #16a34a);">1</div>
+                <div>
+                    <h6>{% trans "Referral Bonus" %} <span style="color: #22c55e;">10%</span></h6>
+                    <p>{% trans "750 PV × 10% = 75 USD per direct referral. Earn every time you invite a new member." %}</p>
+                </div>
+            </div>
+            <div class="bonus-card">
+                <div class="bonus-badge" style="background: linear-gradient(135deg, #f59e0b, #d97706);">2</div>
+                <div>
+                    <h6>{% trans "Level Match" %} <span style="color: #f59e0b;">50%</span></h6>
+                    <p>{% trans "Both legs each have 1+ unit = 375 USD. Infinite levels! First referral goes to extreme left." %}</p>
+                </div>
+            </div>
+            <div class="bonus-card">
+                <div class="bonus-badge" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">3</div>
+                <div>
+                    <h6>{% trans "Pairing Bonus" %} <span style="color: #3b82f6;">11-13%</span></h6>
+                    <p>{% trans "From level 4, excess units earn: P3=11%, P4=12%, P5=13% of weaker leg." %}</p>
+                </div>
+            </div>
+            <div class="bonus-card">
+                <div class="bonus-badge" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">4</div>
+                <div>
+                    <h6>{% trans "Matching Bonus" %} <span style="color: #8b5cf6;">5-10%</span></h6>
+                    <p>{% trans "6 generations of your direct sponsors. Gen 1: 10%, Gen 2-6: 5%. Rank qualified." %}</p>
+                </div>
+            </div>
+            <div class="bonus-card">
+                <div class="bonus-badge" style="background: linear-gradient(135deg, #ef4444, #dc2626);">5</div>
+                <div>
+                    <h6>{% trans "Mutual Aid" %} <span style="color: #ef4444;">5% × 3x</span></h6>
+                    <p>{% trans "5% of upline income. Capped at 3× your investment ($1,000 → max $3,000)." %}</p>
+                </div>
+            </div>
+            <div class="bonus-card">
+                <div class="bonus-badge" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">6</div>
+                <div>
+                    <h6>{% trans "Global Dividend" %} <span style="color: #06b6d4;">5%</span></h6>
+                    <p>{% trans "5% of annual global sales to Star members. 1★ to 7★. One-time = lifetime." %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== WALLET SPLIT ==================== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="wallet-split-card animate-on-view">
+                    <h4 class="fw-bold mb-1"><i class="fas fa-wallet me-2" style="color: var(--accent-1);"></i>{% trans "Daily Bonus Distribution" %}</h4>
+                    <p class="text-secondary mb-4">{% trans "80% withdrawable · 20% product repurchases" %}</p>
+                    <div class="row g-4 mb-4">
+                        <div class="col-6">
+                            <div class="wallet-pct green">80%</div>
+                            <div class="fw-bold mt-2">{% trans "Bonus Wallet" %}</div>
+                            <div class="wallet-sub">{% trans "Withdrawable" %}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="wallet-pct gold">20%</div>
+                            <div class="fw-bold mt-2">{% trans "Repurchase Wallet" %}</div>
+                            <div class="wallet-sub">{% trans "100% redeemable for products" %}</div>
+                        </div>
+                    </div>
+                    <div class="wallet-note">
+                        <i class="fas fa-gift me-2"></i>
+                        {% trans "New members receive 375 USD shopping points! Earn another 375 USD for every referral!" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ==================== STAR TABLE ==================== -->
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-label">{% trans "Global Dividend" %}</div>
+            <h2 class="display-5 fw-bold">{% trans "Star Levels" %}</h2>
+            <p class="text-secondary">{% trans "One-time qualification = lifetime annual dividend" %}</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <table class="star-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans "Star Level" %}</th>
+                            <th>{% trans "Units Required" %}</th>
+                            <th>{% trans "Shares" %}</th>
+                            <th>{% trans "Next Year" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1★</td><td>14/15</td><td>1</td><td>{% trans "1 direct referral" %}</td></tr>
+                        <tr><td>2★</td><td>134/135</td><td>2</td><td>{% trans "2 direct referrals" %}</td></tr>
+                        <tr><td>3★</td><td>667/668</td><td>4</td><td>{% trans "3 direct referrals" %}</td></tr>
+                        <tr><td>4★</td><td>—</td><td>10</td><td>{% trans "100K PV small leg" %}</td></tr>
+                        <tr><td>5★</td><td>—</td><td>20</td><td>{% trans "200K PV small leg" %}</td></tr>
+                        <tr><td>6★</td><td>—</td><td>40</td><td>{% trans "500K PV small leg" %}</td></tr>
+                        <tr><td>7★</td><td>—</td><td>60</td><td>{% trans "1M PV small leg" %}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ==================== FEATURES ==================== -->
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">{% trans "Why EnerPulse?" %}</h2>
+            <p class="text-secondary">{% trans "Built for success in the quantum age" %}</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card-glow p-4 text-center">
+                    <div class="feature-icon-box" style="background: rgba(0,212,255,0.1); margin:0 auto 1rem;">
+                        <i class="fas fa-coins" style="color: var(--accent-1);"></i>
+                    </div>
+                    <h5 class="fw-bold">{% trans "6 Income Streams" %}</h5>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "From referrals and level matches to global dividends — six ways to earn." %}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-glow p-4 text-center">
+                    <div class="feature-icon-box" style="background: rgba(34,197,94,0.1); margin:0 auto 1rem;">
+                        <i class="fas fa-shield-alt" style="color: #22c55e;"></i>
+                    </div>
+                    <h5 class="fw-bold">{% trans "Principal Protection" %}</h5>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "Mutual aid bonus guarantees up to 3× your investment. Always protected." %}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-glow p-4 text-center">
+                    <div class="feature-icon-box" style="background: rgba(124,58,237,0.1); margin:0 auto 1rem;">
+                        <i class="fas fa-globe" style="color: #7c3aed;"></i>
+                    </div>
+                    <h5 class="fw-bold">{% trans "Global Platform" %}</h5>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "Multi-language. Global members. USDT payments. Borderless business." %}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-glow p-4 text-center">
+                    <div class="feature-icon-box" style="background: rgba(245,158,11,0.1); margin:0 auto 1rem;">
+                        <i class="fas fa-sitemap" style="color: #f59e0b;"></i>
+                    </div>
+                    <h5 class="fw-bold">{% trans "Binary Tree" %}</h5>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "Powerful dual-track system. Infinite depth matching. Build deep, share resources." %}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-glow p-4 text-center">
+                    <div class="feature-icon-box" style="background: rgba(59,130,246,0.1); margin:0 auto 1rem;">
+                        <i class="fas fa-bolt" style="color: #3b82f6;"></i>
+                    </div>
+                    <h5 class="fw-bold">{% trans "Daily Payouts" %}</h5>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "Bonuses calculated daily. 80% to bonus wallet, 20% to repurchase wallet." %}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-glow p-4 text-center">
+                    <div class="feature-icon-box" style="background: rgba(6,182,212,0.1); margin:0 auto 1rem;">
+                        <i class="fas fa-gem" style="color: #06b6d4;"></i>
+                    </div>
+                    <h5 class="fw-bold">{% trans "Lifetime Dividends" %}</h5>
+                    <p class="text-secondary" style="font-size:0.9rem;">{% trans "Qualify for Star level once. Receive global dividends every year. Forever." %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section class="cta-section">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-3">{% trans "Ready to Start Your Quantum Journey?" %}</h2>
+        <p class="text-secondary lead mb-4">{% trans "Join thousands of successful EnerPulse members worldwide" %}</p>
+        <a href="{% url 'register' %}" class="btn btn-glow btn-lg px-5 py-3">
+            <i class="fas fa-user-plus me-2"></i>{% trans "Join EnerPulse Now" %}
+        </a>
+    </div>
+</section>
+{% endblock %}

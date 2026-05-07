@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Products" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.product-card.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+.product-image {
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(124,58,237,0.05));
+    position: relative;
+    overflow: hidden;
+}
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+.product-image .pi-icon {
+    font-size: 4.5rem;
+    opacity: 0.4;
+    z-index: 1;
+}
+.product-image .pi-glow {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.08), transparent);
+}
+@keyframes sk-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.3; }
+}
+.skeleton {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    animation: sk-pulse 1.5s ease-in-out infinite;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
+            <div>
+                <div class="section-label">{% trans "Products" %}</div>
+                <h2 class="display-5 fw-bold">{% trans "Quantum Devices" %}</h2>
+                <p class="text-secondary mb-0">{% trans "Browse our premium quantum frequency technology" %}</p>
+            </div>
+        </div>
+
+        <div id="productApp" class="row g-4">
+            <!-- Loading skeleton -->
+            <template v-if="loading">
+                <div v-for="n in 3" class="col-md-4">
+                    <div class="product-card" style="pointer-events:none;">
+                        <div class="product-image skeleton" style="height:260px;"></div>
+                        <div class="product-body p-3">
+                            <div class="skeleton" style="height:24px;width:60%;margin-bottom:10px;"></div>
+                            <div class="skeleton" style="height:14px;width:100%;margin-bottom:6px;"></div>
+                            <div class="skeleton" style="height:14px;width:80%;margin-bottom:16px;"></div>
+                            <div class="skeleton" style="height:36px;width:100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Product cards -->
+            <template v-for="(product, idx) in products" :key="product.id">
+                <div class="col-md-4">
+                    <div class="product-card animate-on-view">
+                        <div class="product-image">
+                            <img v-if="product.image" :src="product.image" :alt="product.display_name">
+                            <template v-else>
+                                <div class="pi-glow"></div>
+                                <i class="fas fa-bolt pi-icon" :style="'color:' + iconColors[idx % iconColors.length]"></i>
+                            </template>
+                        </div>
+                        <div class="product-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="mb-0">${ product.display_name }</h5>
+                                <span class="product-pv">${ product.pv } PV</span>
+                            </div>
+                            <p>${ product.display_description || '{% trans "Quantum frequency resonance device." %}' }</p>
+                            <div class="product-price">$${ formatPrice(product.price_usd) }</div>
+                            <button class="btn btn-glow w-100" @click="addToCart(product.id, $event)">
+                                <i class="fas fa-shopping-bag me-2"></i>{% trans "Add to Cart" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Empty -->
+            <div v-if="!loading && products.length === 0" class="col-12 text-center py-5">
+                <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                <h5>{% trans "No products available" %}</h5>
+                <p class="text-secondary">{% trans "Check back later for new products." %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const { createApp } = Vue;
+
+createApp({
+    delimiters: ['${', '}'],
+    data() {
+        return {
+            products: [],
+            loading: true,
+            iconColors: ['#00d4ff', '#7c3aed', '#f59e0b', '#22c55e', '#ef4444', '#06b6d4'],
+        };
+    },
+    methods: {
+        async fetchProducts() {
+            try {
+                const resp = await fetch('/api/products/');
+                const data = await resp.json();
+                this.products = data.results || data;
+            } catch (err) {
+                console.error('Failed to load products:', err);
+            } finally {
+                this.loading = false;
+                this.$nextTick(() => {
+                    document.querySelectorAll('.animate-on-view').forEach(el => {
+                        if (el.getBoundingClientRect().top < window.innerHeight) {
+                            el.classList.add('visible');
+                        }
+                    });
+                });
+            }
+        },
+        formatPrice(price) {
+            return parseFloat(price).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        },
+        async addToCart(productId, event) {
+            try {
+                const resp = await fetch('/api/cart/add/', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ product_id: productId, quantity: 1 }),
+                });
+                if (resp.ok) {
+                    const summary = await resp.json();
+                    window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: summary.count } }));
+                    // Visual feedback — use currentTarget (always the button)
+                    const btn = event.currentTarget;
+                    const orig = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check me-2"></i>{% trans "Added!" %}';
+                    btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                    setTimeout(() => {
+                        btn.innerHTML = orig;
+                        btn.style.background = '';
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error('Add to cart failed:', err);
+            }
+        },
+    },
+    mounted() {
+        this.fetchProducts();
+    },
+}).mount('#productApp');
+</script>
+{% endblock %}

@@ -1,0 +1,486 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: EnerPulse MLM\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-03 00:00+0800\n"
+"PO-Revision-Date: 2026-05-03 00:00+0800\n"
+"Last-Translator: EnerPulse Team\n"
+"Language-Team: Traditional Chinese\n"
+"Language: zh_Hant\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Your Health & Wealth Journey"
+msgstr "您的健康與財富之旅"
+
+msgid "Build Your Wealth Journey with EnerPulse"
+msgstr "與 EnerPulse 一起打造您的財富之旅"
+
+msgid "Join the most rewarding health product MLM platform. Premium health products + powerful binary compensation plan."
+msgstr "加入最豐厚的健康產品直銷平台。頂級健康產品 + 強大的雙軌獎金制度。"
+
+msgid "Join Now"
+msgstr "立即加入"
+
+msgid "View Products"
+msgstr "查看商品"
+
+msgid "Per Unit"
+msgstr "每單位"
+
+msgid "PV per Unit"
+msgstr "每單位PV"
+
+msgid "Level Match"
+msgstr "層碰"
+
+msgid "How It Works"
+msgstr "運作方式"
+
+msgid "Register & Become a Member"
+msgstr "註冊成為會員"
+
+msgid "Sign up with a referral link and purchase your first unit to activate membership."
+msgstr "透過推薦連結註冊，購買第一個單位啟動會員資格。"
+
+msgid "Refer & Build Your Team"
+msgstr "推薦並建立團隊"
+
+msgid "Share your referral link. Your team grows in a binary tree structure."
+msgstr "分享您的推薦連結。團隊以二元樹結構成長。"
+
+msgid "Earn Multiple Bonuses"
+msgstr "賺取多種獎金"
+
+msgid "6 types of bonuses paid daily into your virtual wallet."
+msgstr "6種獎金每日結算至您的虛擬錢包。"
+
+msgid "Our Products"
+msgstr "我們的產品"
+
+msgid "Premium health products with MLM rewards"
+msgstr "附帶直銷獎勵的頂級健康產品"
+
+msgid "View All"
+msgstr "查看全部"
+
+msgid "Quantum Pulse Frequency Device"
+msgstr "量子脈衝頻率儀"
+
+msgid "Quantum frequency resonance technology — 750 PV"
+msgstr "量子頻率共振技術 — 750 PV"
+
+msgid "Wellness Bundle"
+msgstr "健康組合包"
+
+msgid "Complete wellness package — 1500 PV"
+msgstr "全方位健康組合 — 1500 PV"
+
+msgid "Premium Membership"
+msgstr "尊榮會員"
+
+msgid "Membership activation + starter kit — 750 PV"
+msgstr "會員啟動 + 入門套組 — 750 PV"
+
+msgid "Add to Cart"
+msgstr "加入購物車"
+
+msgid "Compensation Plan"
+msgstr "獎金制度"
+
+msgid "Our powerful binary (dual-track) compensation plan"
+msgstr "我們強大的雙軌制獎金制度"
+
+msgid "Referral Bonus"
+msgstr "推薦獎"
+
+msgid "Earn 10% of every direct referral's PV. 750 PV × 10% = 75 USD per referral."
+msgstr "每直接推薦一人賺取10% PV。每推薦一人可得 750 PV × 10% = 75 美元。"
+
+msgid "When both left and right legs each have 1+ unit, earn 50% of PV = 375 USD. Infinite levels! First referral MUST go to extreme left."
+msgstr "左右區各有一台以上，領取50% PV = 375 美元。無限層！第一單必須放極左。"
+
+msgid "Pairing Bonus"
+msgstr "對碰獎"
+
+msgid "From level 4 onwards, excess units earn pairing bonus. P3=11%, P4=12%, P5=13% of weaker leg excess units."
+msgstr "從第4層開始，超出台數賺取對碰獎金。小區超出台數：P3=11%，P4=12%，P5=13%。"
+
+msgid "Matching Bonus"
+msgstr "對等輔導獎"
+
+msgid "Up to 6 generations of your direct sponsors' earnings. Gen 1: 10%, Gen 2-6: 5%. Requires rank qualifications."
+msgstr "最多6代直推下線獎金。第1代：10%，第2-6代：5%。需滿足等級資格。"
+
+msgid "Mutual Aid"
+msgstr "互助獎"
+
+msgid "Receive 5% of your upline's income. Capped at 3× your investment ($1,000 → max $3,000). Principal protection!"
+msgstr "領取上線收入的5%。最高為投資額的3倍（$1,000 → 最高 $3,000）。保本增值！"
+
+msgid "Global Dividend"
+msgstr "全球分紅"
+
+msgid "5% of annual global sales distributed to qualified Star members. 1★ to 7★ levels. One-time qualification = lifetime dividend."
+msgstr "年度全球業績5%分配給符合資格的星等會員。1★到7★等級。一次達標，年年分紅。"
+
+msgid "Daily Bonus Distribution"
+msgstr "每日獎金分配"
+
+msgid "Bonus Wallet"
+msgstr "獎金錢包"
+
+msgid "Withdrawable"
+msgstr "可提現"
+
+msgid "Repurchase Wallet"
+msgstr "重消錢包"
+
+msgid "100% redeemable for products"
+msgstr "100%兌換產品"
+
+msgid "New members receive 375 USD shopping points! Earn another 375 USD for every referral!"
+msgstr "新會員入會即贈 375 美元購物點數！每推薦一位再得 375 美元點數！"
+
+msgid "Global Dividend — Star Levels"
+msgstr "全球分紅 — 星等制度"
+
+msgid "Star Level"
+msgstr "星等"
+
+msgid "Units Required"
+msgstr "所需台數"
+
+msgid "Shares"
+msgstr "份數"
+
+msgid "Next Year Requirement"
+msgstr "次年門檻"
+
+msgid "1 direct referral"
+msgstr "推薦1人"
+
+msgid "2 direct referrals"
+msgstr "推薦2人"
+
+msgid "3 direct referrals"
+msgstr "推薦3人"
+
+msgid "100K PV small leg"
+msgstr "小區10萬PV"
+
+msgid "200K PV small leg"
+msgstr "小區20萬PV"
+
+msgid "500K PV small leg"
+msgstr "小區50萬PV"
+
+msgid "1M PV small leg"
+msgstr "小區100萬PV"
+
+msgid "One-time qualification = lifetime annual dividend!"
+msgstr "一次達標，年年分紅！"
+
+msgid "Why Choose EnerPulse?"
+msgstr "為什麼選擇 EnerPulse？"
+
+msgid "6 Income Streams"
+msgstr "6種收入來源"
+
+msgid "Earn from referrals, level matches, pairings, matching bonuses, mutual aid, and global dividends."
+msgstr "從推薦獎、層碰、對碰、對等獎、互助獎到全球分紅，6種收入。"
+
+msgid "Principal Protection"
+msgstr "保本增值"
+
+msgid "Mutual aid bonus guarantees you earn back up to 3× your investment. Your principal is always protected."
+msgstr "互助獎保證您最多領回投資額的3倍。本金永遠有保障。"
+
+msgid "Global Platform"
+msgstr "全球平台"
+
+msgid "Multi-language support. Accept members worldwide. USDT payments for seamless global transactions."
+msgstr "多國語言支援。全球招募會員。USDT 支付實現無縫全球交易。"
+
+msgid "Binary Tree"
+msgstr "二元樹制度"
+
+msgid "Powerful dual-track system with infinite depth matching. Build deep, share resources."
+msgstr "強大的雙軌制，無限深度的層碰。建立深度，資源共享。"
+
+msgid "Daily Payouts"
+msgstr "每日結算"
+
+msgid "Bonuses calculated and credited daily. 80% to bonus wallet (withdrawable), 20% to repurchase wallet."
+msgstr "獎金每日計算發放。80%進獎金錢包（可提現），20%進重消錢包。"
+
+msgid "Lifetime Dividends"
+msgstr "終身分紅"
+
+msgid "Qualify for Star level once, receive global dividends every year. Build once, earn forever."
+msgstr "一次達標星等，每年領取全球分紅。一次建立，永續收入。"
+
+msgid "Ready to Start Your Journey?"
+msgstr "準備好開始您的旅程了嗎？"
+
+msgid "Join thousands of successful members worldwide"
+msgstr "加入全球數千名成功會員的行列"
+
+msgid "Join EnerPulse Now"
+msgstr "立即加入 EnerPulse"
+
+msgid "Login"
+msgstr "登入"
+
+msgid "Register"
+msgstr "註冊"
+
+msgid "Products"
+msgstr "商品"
+
+msgid "MLM"
+msgstr "直銷"
+
+msgid "My Profile"
+msgstr "我的檔案"
+
+msgid "My Wallet"
+msgstr "我的錢包"
+
+msgid "My Orders"
+msgstr "我的訂單"
+
+msgid "Logout"
+msgstr "登出"
+
+msgid "All rights reserved."
+msgstr "保留所有權利。"
+
+msgid "Welcome Back"
+msgstr "歡迎回來"
+
+msgid "Sign in to your EnerPulse account"
+msgstr "登入您的 EnerPulse 帳戶"
+
+msgid "Username"
+msgstr "用戶名"
+
+msgid "Password"
+msgstr "密碼"
+
+msgid "Invalid username or password."
+msgstr "用戶名或密碼錯誤。"
+
+msgid "Sign In"
+msgstr "登入"
+
+msgid "Don't have an account?"
+msgstr "還沒有帳戶？"
+
+msgid "Join EnerPulse"
+msgstr "加入 EnerPulse"
+
+msgid "Start your wealth journey today"
+msgstr "今天就開始您的財富之旅"
+
+msgid "Email"
+msgstr "電子郵件"
+
+msgid "Confirm Password"
+msgstr "確認密碼"
+
+msgid "Phone"
+msgstr "電話"
+
+msgid "Country"
+msgstr "國家"
+
+msgid "Referral Code"
+msgstr "推薦碼"
+
+msgid "optional"
+msgstr "選填"
+
+msgid "Enter referral code"
+msgstr "輸入推薦碼"
+
+msgid "Create Account"
+msgstr "建立帳戶"
+
+msgid "Already have an account?"
+msgstr "已經有帳戶了？"
+
+msgid "Membership Benefits"
+msgstr "會員福利"
+
+msgid "375 USD shopping points upon registration"
+msgstr "註冊即送 375 美元購物點數"
+
+msgid "375 USD bonus points for each referral"
+msgstr "每推薦一位再得 375 美元點數"
+
+msgid "Access to 6 types of MLM bonuses"
+msgstr "享有6種直銷獎金"
+
+msgid "Virtual wallet with USDT withdrawals"
+msgstr "虛擬錢包支援 USDT 提現"
+
+msgid "Global dividend qualification"
+msgstr "全球分紅資格"
+
+msgid "Registering..."
+msgstr "註冊中..."
+
+msgid "Registration successful! Redirecting to login..."
+msgstr "註冊成功！正在跳轉到登入頁面..."
+
+msgid "Network error. Please try again."
+msgstr "網路錯誤。請再試一次。"
+
+msgid "Dashboard"
+msgstr "儀表板"
+
+msgid "Membership"
+msgstr "會員資格"
+
+msgid "Non-Member"
+msgstr "非會員"
+
+msgid "Referral Link"
+msgstr "推薦連結"
+
+msgid "Team Stats"
+msgstr "團隊統計"
+
+msgid "Referrals"
+msgstr "推薦人數"
+
+msgid "Left Leg"
+msgstr "左區"
+
+msgid "Right Leg"
+msgstr "右區"
+
+msgid "Total PV"
+msgstr "總PV"
+
+msgid "Quick Actions"
+msgstr "快速操作"
+
+msgid "Buy Products"
+msgstr "購買商品"
+
+msgid "My Team"
+msgstr "我的團隊"
+
+msgid "Order History"
+msgstr "訂單歷史"
+
+msgid "Recent Activity"
+msgstr "近期活動"
+
+msgid "Welcome back"
+msgstr "歡迎回來"
+
+msgid "No recent activity yet. Start by purchasing a product or referring a friend!"
+msgstr "暫無近期活動。開始購買產品或推薦朋友吧！"
+
+msgid "Your cart is empty"
+msgstr "您的購物車是空的"
+
+msgid "Browse our products and add items to your cart."
+msgstr "瀏覽我們的商品並加入購物車。"
+
+msgid "Browse Products"
+msgstr "瀏覽商品"
+
+msgid "Order Summary"
+msgstr "訂單摘要"
+
+msgid "Subtotal"
+msgstr "小計"
+
+msgid "Proceed to Checkout"
+msgstr "前往結帳"
+
+msgid "Checkout"
+msgstr "結帳"
+
+msgid "USDT Payment"
+msgstr "USDT 付款"
+
+msgid "Pay with USDT (TRC-20)"
+msgstr "使用 USDT (TRC-20) 付款"
+
+msgid "Checkout will be available once you add items to your cart."
+msgstr "加入商品至購物車後即可結帳。"
+
+msgid "MLM Dashboard"
+msgstr "直銷儀表板"
+
+msgid "Track your team and earnings"
+msgstr "追蹤您的團隊和收益"
+
+msgid "Your Binary Tree"
+msgstr "您的二元樹"
+
+msgid "Binary tree visualization will appear here once you have downline members."
+msgstr "擁有下線會員後，二元樹圖將顯示在此處。"
+
+msgid "View Full Tree"
+msgstr "查看完整樹狀圖"
+
+msgid "Performance"
+msgstr "績效"
+
+msgid "Performance charts and team growth tracking."
+msgstr "績效圖表和團隊成長追蹤。"
+
+msgid "View Bonuses"
+msgstr "查看獎金"
+
+msgid "Shopping Cart"
+msgstr "購物車"
+
+msgid "Manage your earnings and withdrawals"
+msgstr "管理您的收益和提現"
+
+msgid "of daily bonuses"
+msgstr "的每日獎金"
+
+msgid "withdrawable"
+msgstr "可提現"
+
+msgid "products only"
+msgstr "僅限產品"
+
+msgid "Recent Transactions"
+msgstr "近期交易"
+
+msgid "No transactions yet"
+msgstr "尚無交易記錄"
+
+msgid "View All Transactions"
+msgstr "查看所有交易"
+
+msgid "Withdraw"
+msgstr "提現"
+
+msgid "Withdraw funds from your bonus wallet to your USDT wallet."
+msgstr "從獎金錢包提現至您的 USDT 錢包。"
+
+msgid "Withdraw Now"
+msgstr "立即提現"
+
+msgid "Browse our premium health products"
+msgstr "瀏覽我們的頂級健康產品"
+
+msgid ""
+msgstr ""

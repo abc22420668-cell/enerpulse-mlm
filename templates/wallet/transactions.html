@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Transactions" %} — EnerPulse{% endblock %}
+
+{% block extra_head %}
+<style>
+.tx-empty {
+    text-align: center;
+    padding: 4rem 0;
+}
+.tx-empty i {
+    font-size: 4rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3 mb-5">
+            <div>
+                <div class="section-label">{% trans "History" %}</div>
+                <h2 class="display-5 fw-bold mb-0">{% trans "Transaction History" %}</h2>
+                <p class="text-secondary">{% trans "All your wallet transactions in one place" %}</p>
+            </div>
+            <a href="{% url 'wallet_dashboard' %}" class="btn btn-outline-glow btn-sm ms-auto">
+                <i class="fas fa-arrow-left me-1"></i>{% trans "Back to Wallet" %}
+            </a>
+        </div>
+
+        <div class="card-glow p-5">
+            <div class="tx-empty">
+                <i class="fas fa-receipt"></i>
+                <h5>{% trans "No transactions yet" %}</h5>
+                <p class="text-secondary">{% trans "Your transaction history will appear here once you start earning bonuses or making purchases." %}</p>
+                <a href="{% url 'wallet_dashboard' %}" class="btn btn-glow">
+                    <i class="fas fa-wallet me-2"></i>{% trans "Back to Wallet" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

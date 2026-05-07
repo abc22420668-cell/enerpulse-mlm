@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+{% load i18n static %}
+<html lang="{{ current_language_code }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EnerPulse{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* ========== CSS Variables ========== */
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #12122a;
+            --bg-card: #1a1a3e;
+            --bg-card-hover: #22225a;
+            --text-primary: #f0f0ff;
+            --text-secondary: #8888bb;
+            --text-muted: #555588;
+            --accent-1: #00d4ff;
+            --accent-2: #7c3aed;
+            --accent-3: #f59e0b;
+            --accent-glow: rgba(0, 212, 255, 0.15);
+            --gradient-primary: linear-gradient(135deg, #00d4ff, #7c3aed);
+            --gradient-glow: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(124, 58, 237, 0.3));
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(0, 212, 255, 0.2);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+
+        /* ========== Global ========== */
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Grid background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glow orbs */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* ========== Typography ========== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-1);
+            background: rgba(0, 212, 255, 0.1);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            margin-bottom: 12px;
+        }
+
+        /* ========== Navigation ========== */
+        .navbar {
+            background: rgba(10, 10, 26, 0.85) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--text-primary) !important;
+            letter-spacing: -0.03em;
+        }
+
+        .navbar-brand .brand-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            margin-left: 2px;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary) !important;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link i {
+            margin-right: 6px;
+            font-size: 0.85rem;
+        }
+
+        .btn-glow {
+            background: var(--gradient-primary);
+            border: none;
+            color: white !important;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: var(--gradient-primary);
+            border-radius: 52px;
+            z-index: -1;
+            opacity: 0;
+            filter: blur(15px);
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-glow:hover::before { opacity: 0.5; }
+
+        .btn-outline-glow {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-glow:hover {
+            border-color: var(--accent-1);
+            background: rgba(0, 212, 255, 0.05);
+            color: var(--accent-1);
+            transform: translateY(-2px);
+        }
+
+        /* Language dropdown */
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .lang-dropdown {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            min-width: 180px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .lang-dropdown .dropdown-item {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .lang-dropdown .dropdown-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent-1);
+        }
+
+        .lang-dropdown .dropdown-item.active {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--accent-1);
+        }
+
+        /* Cart badge */
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -6px;
+            background: var(--gradient-primary);
+            font-size: 0.65rem;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            border: 2px solid var(--bg-primary);
+        }
+
+        /* ========== Cards ========== */
+        .card-glow {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-glow::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card-glow:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .card-glow:hover::before { opacity: 1; }
+
+        /* ========== Footer ========== */
+        .footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(10, 10, 26, 0.9);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover { color: var(--accent-1); }
+
+        /* ========== Animations ========== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .animate-on-view {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-view.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== Alerts ========== */
+        .alert-custom {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: var(--radius-sm);
+            color: var(--accent-1);
+            padding: 12px 16px;
+        }
+
+        .alert-custom.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .alert-custom.success {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        /* ========== Scrollbar ========== */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--bg-card-hover); }
+
+        /* ========== Responsive ========== */
+        @media (max-width: 768px) {
+            .navbar { padding: 0.6rem 0; }
+            .navbar-brand { font-size: 1.2rem; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-bolt"></i> EnerPulse<span class="brand-dot"></span>
+            </a>
+
+            <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="color: var(--text-secondary);">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product_list' %}">
+                            <i class="fas fa-box"></i>{% trans "Products" %}
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'mlm_dashboard' %}">
+                            <i class="fas fa-sitemap"></i>{% trans "MLM" %}
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav align-items-center gap-1">
+                    <!-- Cart -->
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{% url 'cart_detail' %}">
+                            <i class="fas fa-shopping-bag"></i>
+                            {% if cart_item_count > 0 %}
+                            <span class="cart-badge">{{ cart_item_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+
+                    <!-- Language Switcher -->
+                    <li class="nav-item dropdown">
+                        <button class="lang-btn dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fas fa-globe me-1"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end lang-dropdown">
+                            {% for lang_code, lang_name in available_languages %}
+                            <li>
+                                <form method="post" action="/i18n/setlang/" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input name="language" type="hidden" value="{{ lang_code }}">
+                                    <button type="submit" class="dropdown-item {% if current_language_code == lang_code %}active{% endif %}">
+                                        {{ lang_name }}
+                                    </button>
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+                    <!-- User Menu -->
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end lang-dropdown">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i>{% trans "My Profile" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'wallet_dashboard' %}"><i class="fas fa-wallet me-2"></i>{% trans "My Wallet" %}</a></li>
+                            <li><hr class="dropdown-divider" style="border-color: var(--border-color);"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>{% trans "Logout" %}</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt"></i> {% trans "Login" %}
+                        </a>
+                    </li>
+                    <li class="nav-item ms-1">
+                        <a href="{% url 'register' %}" class="btn btn-glow btn-sm">
+                            <i class="fas fa-user-plus me-1"></i>{% trans "Register" %}
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-5" id="mainContent">
+        {% if messages %}
+        <div class="container pt-4">
+            {% for message in messages %}
+            <div class="alert-custom {{ message.tags }} d-flex align-items-center justify-content-between mb-3">
+                <span><i class="fas fa-info-circle me-2"></i>{{ message }}</span>
+                <button type="button" class="btn-close btn-close-white btn-sm" data-bs-dismiss="alert" style="opacity:0.5;"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">
+                        <i class="fas fa-bolt me-1" style="color: var(--accent-1);"></i>
+                        &copy; {% now "Y" %} EnerPulse (TM). {% trans "All rights reserved." %}
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-line"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- Intersection Observer for scroll animations -->
+    <script>
+    // Intersection Observer for scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-view').forEach(el => observer.observe(el));
+    });
+
+    // Cart badge live update — listen for custom event from product pages
+    document.addEventListener('cart-updated', function(e) {
+        const badge = document.querySelector('.cart-badge');
+        const count = e.detail.count;
+        if (badge) {
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        } else if (count > 0) {
+            // No badge exists yet — the page will show correct count on reload
+            // (cart_badge only renders when server-side template has count > 0)
+        }
+    });
+
+    // Global add-to-cart function (for homepage buttons without Vue)
+    window.addToCartHome = async function(btn, productId) {
+        try {
+            const resp = await fetch('/api/cart/add/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ product_id: productId, quantity: 1 }),
+            });
+            if (resp.ok) {
+                const summary = await resp.json();
+                window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: summary.count } }));
+                // Visual feedback
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-2"></i>{% trans "Added!" %}';
+                btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.style.background = '';
+                }, 1500);
+            }
+        } catch (err) {
+            console.error('Add to cart failed:', err);
+        }
+    };
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
